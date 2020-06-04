@@ -3,26 +3,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/FirstFragment">
-
+    app:startDestination="@id/noteListFragment">
     <fragment
-        android:id="@+id/FirstFragment"
-        android:name="com.example.notekeeper2020.NoteFragment"
-        android:label="@string/first_fragment_label"
-        tools:layout="@layout/fragment_note">
-
+        android:id="@+id/noteListFragment"
+        android:name="com.example.notekeeper2020.NoteListFragment"
+        android:label="Notes List"
+        tools:layout="@layout/fragment_note_list" >
         <action
-            android:id="@+id/action_FirstFragment_to_SecondFragment"
-            app:destination="@id/SecondFragment" />
+            android:id="@+id/action_noteListFragment_to_noteFragment"
+            app:destination="@id/noteFragment" />
     </fragment>
     <fragment
-        android:id="@+id/SecondFragment"
-        android:name="com.example.notekeeper2020.SecondFragment"
-        android:label="@string/second_fragment_label"
-        tools:layout="@layout/fragment_second">
-
-        <action
-            android:id="@+id/action_SecondFragment_to_FirstFragment"
-            app:destination="@id/FirstFragment" />
+        android:id="@+id/noteFragment"
+        android:name="com.example.notekeeper2020.NoteFragment"
+        android:label="Edit Note"
+        tools:layout="@layout/fragment_note" >
+        <argument
+            android:name="note"
+            app:argType="com.example.notekeeper2020.NoteInfo" />
     </fragment>
 </navigation>

@@ -21,6 +21,7 @@ public class NoteFragment extends Fragment {
     public static final String NOTE_INFO = "com.example.notekeeper2020.NOTE_INFO";
     private NoteInfo mNote;
     private Spinner mSpinnerCourses;
+    private boolean mIsNewNote;
 
     @Override
     public View onCreateView(
@@ -38,6 +39,9 @@ public class NoteFragment extends Fragment {
         if(getArguments() != null) {
             NoteFragmentArgs args = NoteFragmentArgs.fromBundle(getArguments());
             mNote = args.getNote();
+            mIsNewNote = false;
+        }else{
+            mIsNewNote = true;
         }
 
 
@@ -48,8 +52,9 @@ public class NoteFragment extends Fragment {
         EditText textNoteTitle = view.findViewById(R.id.text_note_title);
         EditText textNoteText = view.findViewById(R.id.text_note_text);
 
-
-        displayNotes(mSpinnerCourses,textNoteTitle,textNoteText);
+        if(!mIsNewNote){
+            displayNotes(mSpinnerCourses,textNoteTitle,textNoteText);
+        }
 
         ArrayAdapter<CourseInfo> adapterCourses =
                 new ArrayAdapter<>(requireActivity()

@@ -20,6 +20,8 @@
         tools:layout="@layout/fragment_note" >
         <argument
             android:name="note"
-            app:argType="com.example.notekeeper2020.NoteInfo" />
+            app:argType="com.example.notekeeper2020.NoteInfo"
+            app:nullable="true"
+            android:defaultValue="@null" />
     </fragment>
 </navigation>

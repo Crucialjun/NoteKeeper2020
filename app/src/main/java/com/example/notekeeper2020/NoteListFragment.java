@@ -15,7 +15,6 @@ import androidx.navigation.Navigation;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
-import java.util.Objects;
 
 public class NoteListFragment extends Fragment {
 
@@ -31,7 +30,9 @@ public class NoteListFragment extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Navigation.findNavController(v).navigate(R.id.action_noteListFragment_to_noteFragment);
+                NoteListFragmentDirections.ActionNoteListFragmentToNoteFragment
+                        action = NoteListFragmentDirections.actionNoteListFragmentToNoteFragment();
+                Navigation.findNavController(v).navigate(action);
             }
         });
 
@@ -61,12 +62,9 @@ public class NoteListFragment extends Fragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 NoteInfo note = (NoteInfo) listNotes.getItemAtPosition(position);
 
-                Fragment noteFragment = new NoteFragment();
-                Bundle bundle = new Bundle();
-                bundle.putParcelable(NoteFragment.NOTE_INFO,note);
-                noteFragment.setArguments(bundle);
-
-                NoteListFragmentDirections.ActionNoteListFragmentToNoteFragment action = NoteListFragmentDirections.actionNoteListFragmentToNoteFragment(note);
+                NoteListFragmentDirections.ActionNoteListFragmentToNoteFragment action
+                        = NoteListFragmentDirections.actionNoteListFragmentToNoteFragment();
+                action.setNote(note);
                 Navigation.findNavController(view).navigate(action);
             }
         });

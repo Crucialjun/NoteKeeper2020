@@ -10,18 +10,15 @@ import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 
 import java.util.List;
-import java.util.Objects;
 
 public class NoteFragment extends Fragment {
 
     public static final String NOTE_INFO = "com.example.notekeeper2020.NOTE_INFO";
     private NoteInfo mNote;
     private Spinner mSpinnerCourses;
-    private boolean mIsNewNote;
+    private boolean mIsNewNote = true;
 
     @Override
     public View onCreateView(
@@ -30,20 +27,16 @@ public class NoteFragment extends Fragment {
     ) {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_note, container, false);
+        if(getArguments() != null) {
+            NoteFragmentArgs args = NoteFragmentArgs.fromBundle(getArguments());
+            mNote = args.getNote();
+
+        }
         return view;
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        if(getArguments() != null) {
-            NoteFragmentArgs args = NoteFragmentArgs.fromBundle(getArguments());
-            mNote = args.getNote();
-            mIsNewNote = false;
-        }else{
-            mIsNewNote = true;
-        }
-
 
         mSpinnerCourses = view.findViewById(R.id.spinner_courses);
 
@@ -52,7 +45,7 @@ public class NoteFragment extends Fragment {
         EditText textNoteTitle = view.findViewById(R.id.text_note_title);
         EditText textNoteText = view.findViewById(R.id.text_note_text);
 
-        if(!mIsNewNote){
+        if(mNote != null){
             displayNotes(mSpinnerCourses,textNoteTitle,textNoteText);
         }
 

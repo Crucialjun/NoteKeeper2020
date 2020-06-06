@@ -14,6 +14,7 @@ import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 
 import java.util.List;
 
@@ -27,6 +28,7 @@ public class NoteFragment extends Fragment {
     private EditText mTextNoteTitle;
     private EditText mTextNoteText;
     private int mNotePosition;
+    private boolean mIsCancelling;
 
     @Override
     public View onCreateView(
@@ -111,6 +113,9 @@ public class NoteFragment extends Fragment {
         if (id == R.id.action_send_mail){
             sendEmail();
             return true;
+        }else if(id == R.id.action_cancel){
+            mIsCancelling = true;
+            getParentFragmentManager().popBackStack();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -132,7 +137,13 @@ public class NoteFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        savenote();
+        if(mIsCancelling){
+            if(mIsNewNote) {
+                DataManager.getInstance().removeNote(mNotePosition);
+            }
+        }else{
+            savenote();
+        }
     }
 
     private void savenote() {

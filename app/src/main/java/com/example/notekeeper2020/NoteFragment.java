@@ -1,7 +1,11 @@
 package com.example.notekeeper2020;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -15,10 +19,13 @@ import java.util.List;
 
 public class NoteFragment extends Fragment {
 
-    public static final String NOTE_INFO = "com.example.notekeeper2020.NOTE_INFO";
+    public static final String NOTE_POSITION = "com.example.notekeeper2020.NOTE_POSITION";
+    public static final int POSITION_NOT_SET = -1;
     private NoteInfo mNote;
     private Spinner mSpinnerCourses;
-    private boolean mIsNewNote = true;
+    private boolean mIsNewNote ;
+    private EditText mTextNoteTitle;
+    private EditText mTextNoteText;
 
     @Override
     public View onCreateView(
@@ -27,9 +34,15 @@ public class NoteFragment extends Fragment {
     ) {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_note, container, false);
+        setHasOptionsMenu(true);
         if(getArguments() != null) {
             NoteFragmentArgs args = NoteFragmentArgs.fromBundle(getArguments());
-            mNote = args.getNote();
+            int position = args.getNotePosition();
+            mIsNewNote = position == POSITION_NOT_SET;
+
+            if(!mIsNewNote){
+                mNote = DataManager.getInstance().getNotes().get(position);
+            }
 
         }
         return view;
@@ -42,11 +55,11 @@ public class NoteFragment extends Fragment {
 
         List<CourseInfo> courses = DataManager.getInstance().getCourses();
 
-        EditText textNoteTitle = view.findViewById(R.id.text_note_title);
-        EditText textNoteText = view.findViewById(R.id.text_note_text);
+        mTextNoteTitle = view.findViewById(R.id.text_note_title);
+        mTextNoteText = view.findViewById(R.id.text_note_text);
 
-        if(mNote != null){
-            displayNotes(mSpinnerCourses,textNoteTitle,textNoteText);
+        if(!mIsNewNote){
+            displayNotes(mSpinnerCourses, mTextNoteTitle, mTextNoteText);
         }
 
         ArrayAdapter<CourseInfo> adapterCourses =
@@ -56,7 +69,7 @@ public class NoteFragment extends Fragment {
 
         mSpinnerCourses.setAdapter(adapterCourses);
 
-        getActivity().setTitle("Edit Note");
+        requireActivity().setTitle("Edit Note");
 
 
 
@@ -72,5 +85,34 @@ public class NoteFragment extends Fragment {
 
     }
 
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_note,menu);
+        super.onCreateOptionsMenu(menu,inflater);
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.action_send_mail){
+            sendEmail();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void sendEmail() {
+        CourseInfo course = (CourseInfo) mSpinnerCourses.getSelectedItem();
+        String subject = mTextNoteTitle.getText().toString();
+        String text = "Check out what i learnt in the PluralSight course "
+                + course.getTitle() + "\n  " + mTextNoteText.getText().toString();
+
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("message/rfc2822");
+        intent.putExtra(Intent.EXTRA_SUBJECT,subject);
+        intent.putExtra(Intent.EXTRA_TEXT,text);
+        startActivity(intent);
+
+    }
 }

@@ -64,7 +64,7 @@ public class NoteListFragment extends Fragment {
 
                 NoteListFragmentDirections.ActionNoteListFragmentToNoteFragment action
                         = NoteListFragmentDirections.actionNoteListFragmentToNoteFragment();
-                action.setNote(note);
+                action.setNotePosition(position);
                 Navigation.findNavController(view).navigate(action);
             }
         });

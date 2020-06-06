@@ -18,6 +18,8 @@ import java.util.List;
 
 public class NoteListFragment extends Fragment {
 
+    private ArrayAdapter<NoteInfo> mAdapterNotes;
+
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container,
@@ -52,10 +54,10 @@ public class NoteListFragment extends Fragment {
 
         List<NoteInfo> notes = DataManager.getInstance().getNotes();
 
-        ArrayAdapter<NoteInfo> adapterNotes =
+        mAdapterNotes =
                 new ArrayAdapter<>(requireActivity(),android.R.layout.simple_list_item_1,notes);
 
-        listNotes.setAdapter(adapterNotes);
+        listNotes.setAdapter(mAdapterNotes);
 
         listNotes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

@@ -29,6 +29,9 @@ public class NoteFragment extends Fragment {
     private EditText mTextNoteText;
     private int mNotePosition;
     private boolean mIsCancelling;
+    private String mOriginalNoteCourseId;
+    private String mOriginalCourseTitle;
+    private String mOriginalCourseText;
 
     @Override
     public View onCreateView(
@@ -39,7 +42,18 @@ public class NoteFragment extends Fragment {
         View view =  inflater.inflate(R.layout.fragment_note, container, false);
         setHasOptionsMenu(true);
         readDisplayStateValues();
+        saveOriginalNoteValues();
         return view;
+    }
+
+    private void saveOriginalNoteValues() {
+        if(mIsNewNote){
+            return;
+        }
+        mOriginalNoteCourseId = mNote.getCourse().getCourseId();
+        mOriginalCourseTitle = mNote.getTitle();
+        mOriginalCourseText = mNote.getText();
+
     }
 
     private void readDisplayStateValues() {
@@ -140,10 +154,19 @@ public class NoteFragment extends Fragment {
         if(mIsCancelling){
             if(mIsNewNote) {
                 DataManager.getInstance().removeNote(mNotePosition);
+            }else{
+                storePreviousNoteValues();
             }
         }else{
             savenote();
         }
+    }
+
+    private void storePreviousNoteValues() {
+        CourseInfo course = DataManager.getInstance().getCourse(mOriginalNoteCourseId);
+        mNote.setCourse(course);
+        mNote.setTitle(mOriginalCourseTitle);
+        mNote.setText(mOriginalCourseText);
     }
 
     private void savenote() {

@@ -26,6 +26,7 @@ public class NoteFragment extends Fragment {
     private boolean mIsNewNote ;
     private EditText mTextNoteTitle;
     private EditText mTextNoteText;
+    private int mNotePosition;
 
     @Override
     public View onCreateView(
@@ -35,17 +36,29 @@ public class NoteFragment extends Fragment {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_note, container, false);
         setHasOptionsMenu(true);
+        readDisplayStateValues();
+        return view;
+    }
+
+    private void readDisplayStateValues() {
         if(getArguments() != null) {
             NoteFragmentArgs args = NoteFragmentArgs.fromBundle(getArguments());
             int position = args.getNotePosition();
             mIsNewNote = position == POSITION_NOT_SET;
 
-            if(!mIsNewNote){
+            if(mIsNewNote){
+                createNewNote();
+            }else{
                 mNote = DataManager.getInstance().getNotes().get(position);
             }
 
         }
-        return view;
+    }
+
+    private void createNewNote() {
+        DataManager dm = DataManager.getInstance();
+        mNotePosition = dm.createNewNote();
+        mNote = dm.getNotes().get(mNotePosition);
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
@@ -114,5 +127,17 @@ public class NoteFragment extends Fragment {
         intent.putExtra(Intent.EXTRA_TEXT,text);
         startActivity(intent);
 
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        savenote();
+    }
+
+    private void savenote() {
+        mNote.setCourse((CourseInfo) mSpinnerCourses.getSelectedItem());
+        mNote.setTitle(mTextNoteTitle.getText().toString());
+        mNote.setText(mTextNoteText.getText().toString());
     }
 }

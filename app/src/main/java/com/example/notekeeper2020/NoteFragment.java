@@ -14,7 +14,7 @@ import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import java.util.List;
 
@@ -29,9 +29,7 @@ public class NoteFragment extends Fragment {
     private EditText mTextNoteText;
     private int mNotePosition;
     private boolean mIsCancelling;
-    private String mOriginalNoteCourseId;
-    private String mOriginalCourseTitle;
-    private String mOriginalCourseText;
+    private NoteViewModel mNoteViewModel;
 
     @Override
     public View onCreateView(
@@ -43,6 +41,19 @@ public class NoteFragment extends Fragment {
         setHasOptionsMenu(true);
         readDisplayStateValues();
         saveOriginalNoteValues();
+
+        ViewModelProvider viewModelProvider =
+                new ViewModelProvider(getViewModelStore()
+                        ,ViewModelProvider
+                        .AndroidViewModelFactory
+                        .getInstance(requireActivity()
+                                .getApplication()));
+
+        mNoteViewModel = viewModelProvider.get(NoteViewModel.class);
+        if(savedInstanceState != null && mNoteViewModel.mIsNewlyCreated){
+            mNoteViewModel.restoreState(savedInstanceState);
+        }
+        mNoteViewModel.mIsNewlyCreated = false;
         return view;
     }
 
@@ -50,9 +61,9 @@ public class NoteFragment extends Fragment {
         if(mIsNewNote){
             return;
         }
-        mOriginalNoteCourseId = mNote.getCourse().getCourseId();
-        mOriginalCourseTitle = mNote.getTitle();
-        mOriginalCourseText = mNote.getText();
+        mNoteViewModel.mOriginalNoteCourseId = mNote.getCourse().getCourseId();
+        mNoteViewModel.mOriginalCourseTitle = mNote.getTitle();
+        mNoteViewModel.mOriginalCourseText = mNote.getText();
 
     }
 
@@ -163,15 +174,22 @@ public class NoteFragment extends Fragment {
     }
 
     private void storePreviousNoteValues() {
-        CourseInfo course = DataManager.getInstance().getCourse(mOriginalNoteCourseId);
+        CourseInfo course = DataManager.getInstance().getCourse(mNoteViewModel.mOriginalNoteCourseId);
         mNote.setCourse(course);
-        mNote.setTitle(mOriginalCourseTitle);
-        mNote.setText(mOriginalCourseText);
+        mNote.setTitle(mNoteViewModel.mOriginalCourseTitle);
+        mNote.setText(mNoteViewModel.mOriginalCourseText);
     }
 
     private void savenote() {
         mNote.setCourse((CourseInfo) mSpinnerCourses.getSelectedItem());
         mNote.setTitle(mTextNoteTitle.getText().toString());
         mNote.setText(mTextNoteText.getText().toString());
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        mNoteViewModel.saveState(outState);
     }
 }

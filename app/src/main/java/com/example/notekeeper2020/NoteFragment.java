@@ -2,6 +2,7 @@ package com.example.notekeeper2020;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,6 +20,7 @@ import androidx.lifecycle.ViewModelProvider;
 import java.util.List;
 
 public class NoteFragment extends Fragment {
+    private final String TAG = getClass().getSimpleName();
 
     public static final String NOTE_POSITION = "com.example.notekeeper2020.NOTE_POSITION";
     public static final int POSITION_NOT_SET = -1;
@@ -39,8 +41,6 @@ public class NoteFragment extends Fragment {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_note, container, false);
         setHasOptionsMenu(true);
-        readDisplayStateValues();
-        saveOriginalNoteValues();
 
         ViewModelProvider viewModelProvider =
                 new ViewModelProvider(getViewModelStore()
@@ -54,6 +54,8 @@ public class NoteFragment extends Fragment {
             mNoteViewModel.restoreState(savedInstanceState);
         }
         mNoteViewModel.mIsNewlyCreated = false;
+        readDisplayStateValues();
+        saveOriginalNoteValues();
         return view;
     }
 
@@ -70,14 +72,14 @@ public class NoteFragment extends Fragment {
     private void readDisplayStateValues() {
         if(getArguments() != null) {
             NoteFragmentArgs args = NoteFragmentArgs.fromBundle(getArguments());
-            int position = args.getNotePosition();
-            mIsNewNote = position == POSITION_NOT_SET;
+            mNotePosition = args.getNotePosition();
+            mIsNewNote = mNotePosition == POSITION_NOT_SET;
 
             if(mIsNewNote){
                 createNewNote();
-            }else{
-                mNote = DataManager.getInstance().getNotes().get(position);
             }
+            Log.i(TAG, "readDisplayStateValues: mNotePosition : " + mNotePosition);
+            mNote = DataManager.getInstance().getNotes().get(mNotePosition);
 
         }
     }
@@ -85,7 +87,7 @@ public class NoteFragment extends Fragment {
     private void createNewNote() {
         DataManager dm = DataManager.getInstance();
         mNotePosition = dm.createNewNote();
-        mNote = dm.getNotes().get(mNotePosition);
+       // mNote = dm.getNotes().get(mNotePosition);
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
@@ -163,6 +165,7 @@ public class NoteFragment extends Fragment {
     public void onPause() {
         super.onPause();
         if(mIsCancelling){
+            Log.i(TAG, "onPause: Cancelling note at position " + mNotePosition);
             if(mIsNewNote) {
                 DataManager.getInstance().removeNote(mNotePosition);
             }else{
@@ -171,6 +174,7 @@ public class NoteFragment extends Fragment {
         }else{
             savenote();
         }
+        Log.d(TAG, "onPause: ");
     }
 
     private void storePreviousNoteValues() {

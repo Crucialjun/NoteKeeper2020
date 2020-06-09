@@ -4,17 +4,15 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
-import java.util.List;
 
 public class NoteListFragment extends Fragment {
 
@@ -50,25 +48,30 @@ public class NoteListFragment extends Fragment {
     }
 
     private void initializeDisplayContent() {
-        final ListView listNotes = requireView().findViewById(R.id.list_notes);
+//        final ListView listNotes = requireView().findViewById(R.id.list_notes);
+//
+//        List<NoteInfo> notes = DataManager.getInstance().getNotes();
+//
+//        mAdapterNotes =
+//                new ArrayAdapter<>(requireActivity(),android.R.layout.simple_list_item_1,notes);
+//
+//        listNotes.setAdapter(mAdapterNotes);
+//
+//        listNotes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+//                NoteInfo note = (NoteInfo) listNotes.getItemAtPosition(position);
+//
+//                NoteListFragmentDirections.ActionNoteListFragmentToNoteFragment action
+//                        = NoteListFragmentDirections.actionNoteListFragmentToNoteFragment();
+//                action.setNotePosition(position);
+//                Navigation.findNavController(view).navigate(action);
+//            }
+//        });
 
-        List<NoteInfo> notes = DataManager.getInstance().getNotes();
+        final RecyclerView recyclerNotes = requireView().findViewById(R.id.list_notes);
+        final LinearLayoutManager notesLayoutManager = new LinearLayoutManager(getActivity());
+        recyclerNotes.setLayoutManager(notesLayoutManager);
 
-        mAdapterNotes =
-                new ArrayAdapter<>(requireActivity(),android.R.layout.simple_list_item_1,notes);
-
-        listNotes.setAdapter(mAdapterNotes);
-
-        listNotes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                NoteInfo note = (NoteInfo) listNotes.getItemAtPosition(position);
-
-                NoteListFragmentDirections.ActionNoteListFragmentToNoteFragment action
-                        = NoteListFragmentDirections.actionNoteListFragmentToNoteFragment();
-                action.setNotePosition(position);
-                Navigation.findNavController(view).navigate(action);
-            }
-        });
     }
 }

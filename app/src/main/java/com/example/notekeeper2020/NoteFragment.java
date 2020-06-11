@@ -98,7 +98,7 @@ public class NoteFragment extends Fragment {
         List<CourseInfo> courses = DataManager.getInstance().getCourses();
 
         mTextNoteTitle = view.findViewById(R.id.text_note_title);
-        mTextNoteText = view.findViewById(R.id.text_note_text);
+        mTextNoteText = view.findViewById(R.id.text_title);
 
         if(!mIsNewNote){
             displayNotes(mSpinnerCourses, mTextNoteTitle, mTextNoteText);
@@ -143,8 +143,20 @@ public class NoteFragment extends Fragment {
         }else if(id == R.id.action_cancel){
             mIsCancelling = true;
             getParentFragmentManager().popBackStack();
+        }else if(id == R.id.action_next){
+            moveNext();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void moveNext() {
+        savenote();
+        ++mNotePosition;
+        mNote = DataManager.getInstance().getNotes().get(mNotePosition);
+
+        saveOriginalNoteValues();
+        displayNotes(mSpinnerCourses,mTextNoteTitle,mTextNoteText);
+
     }
 
     private void sendEmail() {
@@ -175,6 +187,7 @@ public class NoteFragment extends Fragment {
             savenote();
         }
         Log.d(TAG, "onPause: ");
+
     }
 
     private void storePreviousNoteValues() {

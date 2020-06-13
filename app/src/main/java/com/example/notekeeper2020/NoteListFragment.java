@@ -72,7 +72,7 @@ public class NoteListFragment extends Fragment {
 //            }
 //        });
 
-        final RecyclerView recyclerNotes = requireView().findViewById(R.id.list_notes);
+        final RecyclerView recyclerNotes = requireView().findViewById(R.id.list_items);
         final LinearLayoutManager notesLayoutManager = new LinearLayoutManager(getActivity());
         recyclerNotes.setLayoutManager(notesLayoutManager);
 

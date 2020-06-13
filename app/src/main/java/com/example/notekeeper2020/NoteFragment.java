@@ -149,6 +149,14 @@ public class NoteFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onPrepareOptionsMenu(@NonNull Menu menu) {
+        MenuItem menuItem  = menu.findItem(R.id.action_next);
+        int lastnoteIndex = DataManager.getInstance().getNotes().size() - 1;
+        menuItem.setEnabled(mNotePosition < lastnoteIndex);
+        super.onPrepareOptionsMenu(menu);
+    }
+
     private void moveNext() {
         savenote();
         ++mNotePosition;
@@ -156,6 +164,7 @@ public class NoteFragment extends Fragment {
 
         saveOriginalNoteValues();
         displayNotes(mSpinnerCourses,mTextNoteTitle,mTextNoteText);
+        getActivity().invalidateOptionsMenu();
 
     }
 

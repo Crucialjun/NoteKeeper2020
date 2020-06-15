@@ -66,7 +66,7 @@ public class CoursesFragment extends Fragment {
 //        });
 
         mRecyclerItems = requireView().findViewById(R.id.list_courses);
-        mCoursesLayoutManager = new GridLayoutManager(getActivity(),2);
+        mCoursesLayoutManager = new GridLayoutManager(getActivity(),getResources().getInteger(R.integer.course_grid_span));
 
 
         List<CourseInfo> courses = DataManager.getInstance().getCourses();

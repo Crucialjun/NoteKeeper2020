@@ -33,7 +33,6 @@ public class NoteListFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_note_list, container, false);
 
-        requireActivity().setTitle("NoteKeeper");
         FloatingActionButton fab = view.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -50,6 +49,7 @@ public class NoteListFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        requireActivity().setTitle("NoteKeeper");
 
         initializeDisplayContent();
 

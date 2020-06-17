@@ -101,4 +101,6 @@ public class NoteListFragment extends Fragment {
         super.onResume();
         mNoteRecyclerAdapter.notifyDataSetChanged();
     }
+
+
 }

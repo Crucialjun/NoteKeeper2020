@@ -1,9 +1,11 @@
 package com.example.notekeeper2020;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,6 +20,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+import androidx.preference.PreferenceManager;
 
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
@@ -26,6 +29,7 @@ public class MainActivity2 extends AppCompatActivity {
 
     private static final String TAG =  MainActivity2.class.getName();
     private AppBarConfiguration mAppBarConfiguration;
+    private NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +39,7 @@ public class MainActivity2 extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         final DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
@@ -109,4 +113,34 @@ public class MainActivity2 extends AppCompatActivity {
         View view = findViewById(R.id.list_items);
         Snackbar.make(view,message,Snackbar.LENGTH_LONG).show();
     }
+
+    @Override
+    protected void onResumeFragments() {
+        super.onResumeFragments();
+        updateNavHeader();
+
+
+    }
+
+    public void updateNavHeader() {
+        View headerView = navigationView.getHeaderView(0);
+        TextView textUserName = headerView.findViewById(R.id.text_user_name);
+        TextView textEmailAddress = headerView.findViewById(R.id.text_email_address);
+
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+        String username = pref.getString("user_display_name","");
+        String email = pref.getString("user_email_address","");
+
+        textUserName.setText(username);
+        textEmailAddress.setText(email);
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateNavHeader();
+    }
+
+
 }

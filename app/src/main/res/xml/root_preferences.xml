@@ -1,18 +1,28 @@
-<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory app:title="General">
 
         <EditTextPreference
-            app:key="signature"
-            app:title="@string/signature_title"
+            app:defaultValue="Your Name"
+            app:key="user_display_name"
+            app:title="Display Name"
             app:useSimpleSummaryProvider="true" />
 
+        <EditTextPreference
+            app:useSimpleSummaryProvider="true"
+            app:defaultValue="yourname@yourhost.com"
+            android:defaultValue="true"
+            android:key="user_email_address"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="Email Address" />
         <ListPreference
-            app:defaultValue="reply"
+            app:defaultValue="http://plus.google.com"
             app:entries="@array/reply_entries"
             app:entryValues="@array/reply_values"
-            app:key="reply"
-            app:title="@string/reply_title"
+            app:key="user_favorite_social"
+            app:title="Favorite Social Network"
             app:useSimpleSummaryProvider="true" />
 
     </PreferenceCategory>
